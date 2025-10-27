@@ -29,5 +29,14 @@
 | 구분 | 기술 스택 |   
 | :---: | :---: |   
 | **프론트 앤드** | HTML5, CSS3, JavaScript |   
-| **툴** | Chrome, Figma, Git, GitHub  |    
-  
+| **툴** | Chrome, Figma, Git, GitHub  |   
+
+## 로드맵   
+### v0.1 작업목록
+- [ ] HTML 구조 작성   
+- [ ] Web접근성 추가   
+- [ ] Meta Data 추가   
+- [ ] CSS 추가   
+
+
+
