@@ -1,11 +1,89 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+	button{
+		background-color: #22C784;
+		border: 1px solid #1A9E6A;
+		height: 35px;
+		padding: 0px 16px;
+		border-radius:8px;
+		color: white;
+		cursor: pointer;
+	}
+	
+	body{
+	 	display: flex;
+    	flex-direction: column;
+    	align-items: center;
+    	background-color: #f1efef;
+    	gap: 33px;
+	}
+	
+	.add-todo-section {
+		width:100%;
+	}
+	
+	form {
+		width: 100%;
+    	display: flex;
+    	flex-direction: row;
+    	justify-content: space-between;
+    	gap: 11px;
+	}
+	
+	form input {
+		flex: 1;
+		height: 31px;
+    	border-radius: 10px;
+    	border: 1px solid lightgray;
+    	padding-left: 12px;
+	}
+	
+	hr {
+    	background-color: #1A9E6A;
+    	height: 6px;
+    	width: 81px;
+    	border-radius: 8px;
+
+	}
+	
+	.todo-list-section {
+		width:100%;
+	}
+	
+	.todo-list-section ul {
+		display: flex;
+    	flex-direction: column;
+    	gap: 11px;
+    	padding: 0px;
+    	margin: 0px;
+    	margin: 0px;
+	}
+	
+	.todo-list-section ul li {
+		list-style: none;
+	}
+	
+	.todo-list-section ul li article {
+		border: 1px solid lightgray;
+    	display: flex;
+    	flex-direction: row;
+    	justify-content: space-between;
+    	align-items: center;
+		padding: 22px;
+    	border-radius: 14px;
+    	background-color: white;
+	}
+	
+</style>
 <meta charset="UTF-8">
 <title>simple Todo View</title>
 </head>
 <body>
-	<section>
+
+
+	<section class="add-todo-section" >
 		<form>
 			<input type="text" placeholder="새로운 일정을 추가하세요."/>
 			<button type="submit">추가</button>
@@ -14,7 +92,7 @@
 
 	<hr/>
 
-	<section>
+	<section class="todo-list-section">
 		<ul>
 			<li>
 				<article>
