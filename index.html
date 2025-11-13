@@ -84,8 +84,8 @@
 
 
 	<section class="add-todo-section" >
-		<form>
-			<input type="text" placeholder="새로운 일정을 추가하세요."/>
+		<form id="add_todo">
+			<input type="text" name="title" placeholder="새로운 일정을 추가하세요."/>
 			<button type="submit">추가</button>
 		</form>
 	</section>
@@ -128,4 +128,52 @@
 	</section>
 
 </body>
+
+
+<script>
+console.log(localStorage.getItem('key'));
+// 아이디를 통해서 element를 가져와라 
+let addTodo = document.getElementById('add_todo');
+
+let todoItemList = [];
+
+// function 부터가 선언부 
+addTodo.onsubmit = function(e) {
+	// preventDefault = (submit의 기본 이벤트를)새로고침을 막는다 
+	e.preventDefault();
+	
+	//1. formData 변수 선언
+	var formData;
+	
+	//2. formData 변수에 addTodo의 formData 할당 
+	formData = new FormData(addTodo);
+	console.log(formData);	
+	console.log(formData.entries());	
+	console.log(formData.get("title"));	
+
+	//3. formData 값에 todoItem 제목이 존재하면 로컬 스토리지에 추가
+	var title;
+	
+	title = formData.get('title');
+	
+	if ( title != '' ) {
+		todoItemList.push(title);
+		localStorage.setItem('key', todoItemList);
+		// localStorage = 클라이언트단에서만 쓰이는 저장소
+		// localStorage.setItem('key', title);
+		console.log(localStorage.getItem('key'));
+	}
+	
+	// formData 값에 제목이 존재하지 않으면 alert
+	if ( title == '' ) {
+		alert('제목을 입력하세요');
+	}
+	
+}
+
+
+
+</script>
+
 </html>
+
