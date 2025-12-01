@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		button{
+			background-color: #22C784;
+			border: 1px solid #1A9E6A;
+			height: 35px;
+			padding: 0px 16px;
+			border-radius:8px;
+			color: white;
+			cursor: pointer;
+		}
+		
+		body{
+		 	display: flex;
+	    	flex-direction: column;
+	    	align-items: center;
+	    	background-color: #f1efef;
+	    	gap: 33px;
+		}
+		
+		.add-todo-section {
+			width:100%;
+		}
+		
+		form {
+			width: 100%;
+	    	display: flex;
+	    	flex-direction: row;
+	    	justify-content: space-between;
+	    	gap: 11px;
+		}
+		
+		form input {
+			flex: 1;
+			height: 31px;
+	    	border-radius: 10px;
+	    	border: 1px solid lightgray;
+	    	padding-left: 12px;
+		}
+		
+		hr {
+	    	background-color: #1A9E6A;
+	    	height: 6px;
+	    	width: 81px;
+	    	border-radius: 8px;
+	
+		}
+		
+		.todo-list-section {
+			width:100%;
+		}
+		
+		.todo-list-section ul {
+			display: flex;
+	    	flex-direction: column;
+	    	gap: 11px;
+	    	padding: 0px;
+	    	margin: 0px;
+	    	margin: 0px;
+		}
+		
+		.todo-list-section ul li {
+			list-style: none;
+		}
+		
+		.todo-list-section ul li article {
+			border: 1px solid lightgray;
+	    	display: flex;
+	    	flex-direction: row;
+	    	justify-content: space-between;
+	    	align-items: center;
+			padding: 22px;
+	    	border-radius: 14px;
+	    	background-color: white;
+		}
+		
+		.todo-list-section ul li article.complete {
+			background-color: #7fddb7;
+		}
+		
+	</style>
+	<meta charset="UTF-8">
+	<title>simple Todo View</title>
+</head>
+
+<body>
+	<section class="add-todo-section" >
+		<form id="add_todo">
+			<input type="text" name="title" placeholder="새로운 일정을 추가하세요."/>
+			<button type="submit">추가</button>
+		</form>
+	</section>
+
+	<hr/>
+
+	<section class="todo-list-section">
+		<ul id="todoListUl">				
+		</ul>
+	</section>
+
+</body>
+<script>
+	/**
+	 * var : 옛날것. 요즘은 안 씀.
+	 * let : var 변수가 쓰는데 어려움이 있어. 그래서 생긴 변수 타입. var 변수의 호이스팅 문제를 해결.
+	 * const : 다시는 변경하지 않을 값을 선언하기 위한 변수 타입
+	 */
+	
+	//전역 변수 선언
+	let parsedTodoList = [];
+	//선언한 전역 변수에 function getTodoList() 함수 담아 동작
+	parsedTodoList = getTodoList();
+	//가져온 데이터로 UI 생성 함수 동작
+	renderTodoList();
+
+	// 1. 로컬스토리지에 저장된 일정 목록 데이터 가져오기 - complete
+	// 오류없이 일정 목록 가져오기
+	function getTodoList() {
+		// localStorage에 있는 일정 목록 아이템 가져오기
+		let todoList = localStorage.getItem("TODO_LIST_KEY");
+		// 만약 가져온 값이 null이라면 빈 배열 값으로 변환
+		if ( todoList == null ) {
+			todoList = "[]";
+		}
+		
+		let parsedTodoList = JSON.parse(todoList);
+		
+		return parsedTodoList;
+	}
+	
+	// 2. 가져온 데이터가 올바른 데이터인지 체크 - pass
+	
+	
+	
+	// 3. 가져온 데이터로 UI 생성
+	function renderTodoList() {
+		// 3-1. 일정 목록을 담을 ul 엘리멘트 추출
+		let todoListUl = document.getElementById("todoListUl");
+		
+		// 3-2. ul 엘리멘트 비우기
+		todoListUl.innerHTML = "";
+		
+		// 3-3. parsedTodoList를 순회하면서 각 정보를 엘리멘트로 변경
+		// 코드 리팩토링 진행 (성능보다 가독성에 중점!!)
+		for( let i = 0; i < parsedTodoList.length; i++ ) {
+			let parsedTodoItem = parsedTodoList[i];
+			let title = parsedTodoItem.title;
+			let isCompleted = parsedTodoItem.isCompleted;
+			let id = "todo" + (i + 1);
+			
+			todoListUl.innerHTML += `
+			<li>
+				<article>
+					<div>
+						<input type="checkbox" id="${id}" ${ isCompleted ? "checked" : "" }/>
+						<label for="${id}">${title}</label>
+					</div>
+					<div>
+						<button>삭제</button>
+					</div>
+				</article>			
+			</li>`;
+		}
+	}
+</script>
+
+</html>
+

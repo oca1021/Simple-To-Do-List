@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		button{
+			background-color: #22C784;
+			border: 1px solid #1A9E6A;
+			height: 35px;
+			padding: 0px 16px;
+			border-radius:8px;
+			color: white;
+			cursor: pointer;
+		}
+		
+		body{
+		 	display: flex;
+	    	flex-direction: column;
+	    	align-items: center;
+	    	background-color: #f1efef;
+	    	gap: 33px;
+		}
+		
+		.add-todo-section {
+			width:100%;
+		}
+		
+		form {
+			width: 100%;
+	    	display: flex;
+	    	flex-direction: row;
+	    	justify-content: space-between;
+	    	gap: 11px;
+		}
+		
+		form input {
+			flex: 1;
+			height: 31px;
+	    	border-radius: 10px;
+	    	border: 1px solid lightgray;
+	    	padding-left: 12px;
+		}
+		
+		hr {
+	    	background-color: #1A9E6A;
+	    	height: 6px;
+	    	width: 81px;
+	    	border-radius: 8px;
+	
+		}
+		
+		.todo-list-section {
+			width:100%;
+		}
+		
+		.todo-list-section ul {
+			display: flex;
+	    	flex-direction: column;
+	    	gap: 11px;
+	    	padding: 0px;
+	    	margin: 0px;
+	    	margin: 0px;
+		}
+		
+		.todo-list-section ul li {
+			list-style: none;
+		}
+		
+		.todo-list-section ul li article {
+			border: 1px solid lightgray;
+	    	display: flex;
+	    	flex-direction: row;
+	    	justify-content: space-between;
+	    	align-items: center;
+			padding: 22px;
+	    	border-radius: 14px;
+	    	background-color: white;
+		}
+		
+		.todo-list-section ul li article.complete {
+			background-color: #7fddb7;
+		}
+		
+	</style>
+	<meta charset="UTF-8">
+	<title>simple Todo View</title>
+</head>
+
+<body>
+	<section class="add-todo-section" >
+		<form id="add_todo">
+			<input type="text" name="title" id="todoInput" placeholder="새로운 일정을 추가하세요."/>
+			<button type="submit">추가</button>
+		</form>
+	</section>
+
+	<hr/>
+
+	<section class="todo-list-section">
+		<ul id="todoListUl">				
+		</ul>
+	</section>
+
+</body>
+<script>
+
+	
+	let form = document.getElementById('add_todo');
+
+	console.log(form);
+	
+	form.onsubmit = function() {
+		addTodoList();
+	
+	}
+	
+	setTodoListUi();
+	
+	bindDeleteEvent();
+	
+	function bindDeleteEvent() {
+		let delBtns = document.getElementsByClassName("delBtn");
+	
+		for (let i = 0; i < delBtns.length; i++) {
+			let delBtn = delBtns[i];
+			delBtn.onclick = function() {
+				console.log(delBtn, delBtn.id);
+				delTodoList(delBtn.id);
+				setTodoListUi();
+			}
+		}
+		
+	}
+	
+	// 일정 목록 가져오기
+	function getTodoList() {
+		// 로컬스토리지에서 가져온 데이터를 담을 변수 선언 "[{},{}]"(로컬스토리지는 문자열로 담아서 가져옴)
+		let todoList = localStorage.getItem('todoList'); 
+		// 로컬스토리지에서 가져온 데이터가 빈 값일 경우도 생각해야한다
+		if( todoList == null) {
+			todoList = '[]';
+		}
+		// 가져온 데이터를 파싱한다.(json형식으로) , 배열로 읽어야 되기 때문에 파싱을 한다([{},{}]) 
+		let parseList = JSON.parse(todoList);
+		// 파싱한 데이터 값을 변수를 선언하여 담는다.
+		let parseTodoList = parseList;
+		// 변수를 반환한다.
+		return parseTodoList;
+		
+	}
+	
+	// 일정 목록 화면에 생성하기
+	function setTodoListUi() {
+
+		// 일정 목록 가져와서 변수에 담기
+		let todoList = getTodoList(); // [ {title: "일정1", isCompleted: false}, {title: "일정2", isCompleted: false} ]
+		// 일정 목록을 담을 ul태그 가져오기
+		let todoListUl = document.getElementById('todoListUl');
+		// todoList 순회하면서 title 값 추출
+		// todoList[0].title == "일정1"
+		// todoList[1].title == "일정2"
+		todoListUl.innerHTML = '';
+		for( let i = 0; i < todoList.length; i++ ) {
+			// i번째 투두일정 추출
+			let todo = todoList[i];
+			// i번째 투두일정의 title 추출
+			let title = todo.title;
+			// isCompleted 변수 선언
+			let isCompleted = todo.isCompleted;
+			// id 변수 선언
+			let id = "list" + i;
+			
+			todoListUl.innerHTML += `
+			<li>
+				<article>
+					<div>
+						<input type="checkbox" id="${id}" ${ isCompleted ? "checked" : "" }/>
+						<label for="${id}">${title}</label>
+					</div>
+					<div>
+						<button class="delBtn" id="${todo.id}">삭제</button>
+					</div>
+				</article>			
+			</li>`;
+		}
+	}	
+	
+	
+	
+	function addTodoList() {
+		// C. 변수(todoInputEl)를 생성하고, 사용자가 일정 제목을 입력하는 input 요소를 가져와서 (todoInputEl) 변수에 담는다.
+		let todoInputEl = document.getElementById('todoInput');
+		
+		// B. (todoInputEl) 요소의 값을 담은 변수(todoTitle)를 생성한다.
+		let todoTitle = todoInputEl.value;
+		
+		// A. (todoInputEl) 요소의 값을 빈 문자열로 초기화한다.
+		todoInputEl.value = "";
+		
+		// H. (todoTitle) 값이 빈 값인 경우 "일정 제목을 입력하세요."라는 경고 메세지를 표시하고 함수를 종료한다.
+		if (todoTitle == '') {
+	    	alert("일정 제목을 입력하세요.");
+	    	return;
+		}
+		
+		// E. 배열 변수(todoList)를 생성하고, (todoList)에 현재 저장되어 있는 일정 목록을 담는다.
+		let todoList = getTodoList();
+		
+		// D. 객체 변수(newTodoItem)를 생성하고, (newTodoItem) 객체의 title 멤버 값을 (todoTitle) 값으로 세팅한다.
+		let newTodoItem = {};
+		newTodoItem.title = todoTitle;
+		
+		// I. (newTodoItem) 객체에 isCompleted 멤버를 false로 세팅한다.
+		newTodoItem.isCompleted = false;
+		
+		// G. (todoList) 배열에 (newTodoItem) 객체를 추가한다.
+		todoList.push(newTodoItem);
+		
+		// F. (todoList) 배열을 JSON 형식으로 변경한 뒤 로컬스토리지에 저장한다.(이때, 로컬스토리지 키 값은 "todoList"로 사용한다)
+		todoList = JSON.stringify(todoList);
+		localStorage.setItem("todoList", todoList);
+	}
+
+	
+	// 삭제 기능 함수
+	function delTodoList(targetId) {
+
+		// C: 배열 변수(todoList)를 생성하고, selectTodoList 함수를 이용해서 (todoList)에 현재 시스템에 저장되어 있는 일정 목록을 담는다.
+		let todoList = getTodoList();
+		// D: 삭제하지 않고 남겨둘 일정 항목들만 저장할 (undeletedTodoList) 변수를 생성한다.
+		let undeletedTodoList = [];
+		// B: (todoList) 배열을 순회하면서, 일정 아이템의 id 값이 파라미터로 전달받은 (targetId)와 동일하지 않은 데이터들만 추출하여 
+		//(undeletedTodoList) 변수에 담는다. (필터링을 통한 삭제 효과)
+		for (let i = 0; i < todoList.length; i++) {
+        	if (todoList[i].id != targetId) {
+                undeletedTodoList.push(todoList[i]);
+            }
+        }	
+		// A: (undeletedTodoList) 배열을 JSON 문자열 형식으로 변경한다.
+        undeletedTodoList = JSON.stringify(undeletedTodoList);
+		// E: (undeletedTodoList) 변수 값을 로컬스토리지에 저장한다.(이때, 로컬스토리지 키 값은 "todoList"로 사용한다)
+		localStorage.setItem("todoList", undeletedTodoList);
+		
+
+		
+		
+	}
+	
+	
+	
+</script>
+
+</html>
+
